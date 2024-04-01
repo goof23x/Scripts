@@ -1,0 +1,20 @@
+# Ask for the folder path
+$folderPath = Read-Host "Please enter the full path to the folder containing the PDF files"
+
+# Change to the directory provided
+Set-Location -Path $folderPath
+
+# Get all PDF files in the folder
+$pdfFiles = Get-ChildItem -Path . -Filter *.pdf
+
+# Generate the pdftk command to combine all PDF files
+$pdftkCommand = "pdftk"
+foreach ($file in $pdfFiles) {
+    $pdftkCommand += " `"$($file.Name)`""
+}
+$pdftkCommand += " cat output combined.pdf"
+
+# Execute the pdftk command
+Invoke-Expression $pdftkCommand
+
+Write-Host "All PDF files have been combined into combined.pdf"
